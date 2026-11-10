@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.lab-runtime/
+.venv/
+.env
+.env.*
+student/runs/
+student/runs_mock/
+*.log
+*.aux
+*.out
+*.toc
+*.synctex.gz

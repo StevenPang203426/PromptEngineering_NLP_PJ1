@@ -1,0 +1,16 @@
+{
+  "python": "3.12.16",
+  "uv": "0.13.6",
+  "vllm": "0.10.2",
+  "torch": "2.8.0",
+  "modelscope": "1.40.0",
+  "transformers": "4.55.4",
+  "uv_wheel": {
+    "url": "https://files.pythonhosted.org/packages/5c/43/0688ff5142934238f2812e348f4a24e09b57d48bfb38dd8f850325a0d9de/uv-0.13.6-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "sha256": "22759b8895e1103578de6fb4cd27e94b4399d021023378d29f01333717751fba"
+  },
+  "profile": "4090",
+  "cuda": "12.8",
+  "minimum_driver": "550.142",
+  "validation": "RTX4090 / NVIDIA driver550.142 / Ubuntu22.04.5; detailed evidence in teacher deployment_validation"
+}

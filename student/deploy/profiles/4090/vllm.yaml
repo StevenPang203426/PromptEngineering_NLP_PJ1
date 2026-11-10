@@ -1,0 +1,17 @@
+# vLLM 0.10.2. Run: bash deploy/start.sh
+model: Qwen/Qwen3-4B
+served-model-name: Qwen/Qwen3-4B
+revision: 1cfa9a7208912126459214e8b04321603b3df60c
+tokenizer-revision: 1cfa9a7208912126459214e8b04321603b3df60c
+host: 127.0.0.1
+port: 8000
+api-key: lab-local
+tensor-parallel-size: 1
+dtype: bfloat16
+kv-cache-dtype: auto
+seed: 0
+max-num-seqs: 16
+gpu-memory-utilization: 0.85
+reasoning-parser: qwen3
+generation-config: vllm
+override-generation-config: '{"temperature": 0.6, "top_p": 0.95, "top_k": 20, "min_p": 0.0}'

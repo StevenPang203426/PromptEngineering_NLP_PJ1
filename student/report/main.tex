@@ -1,0 +1,62 @@
+% XeLaTeX 编译两次。正文最多4页，参考文献和提示词附录另起页。
+\documentclass{article}
+\usepackage[preprint,nonatbib]{neurips_2026}
+\usepackage[UTF8,fontset=fandol]{ctex}
+\usepackage{graphicx,booktabs,tabularx,amsmath,xcolor,fancyvrb,hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=black}
+\makeatletter
+\renewcommand{\@noticestring}{自然语言处理与大语言模型\quad 实验课1报告}
+\makeatother
+\linespread{1.15}
+\title{论文比较中的提示词探索：填写你的研究问题}
+\author{姓名\quad 学号\\复旦大学}
+\newcommand{\todo}[1]{\textcolor{gray}{#1}}
+\begin{document}
+\maketitle
+\begin{abstract}
+\todo{用三四句话概括研究问题、比较的方法和主要发现。}
+\end{abstract}
+\section{问题分析}
+\todo{以下章节可按自己的探索过程调整。}
+\todo{提出一个具体问题，例如“明确比较维度能否提高准确率”。说明你的判断依据与预期。}
+
+\todo{简述方案：如何选择示例、组织提示词、调用模型并提取A/B。}
+\section{提示词调优过程}
+\todo{至少尝试3种提示词工程方法，例如直接指令、few-shot、分步比较或多次采样投票。说明各方法的设计、结果和原因，解释最终选择。正文摘录关键改动，最终选定的完整提示词放附录。}
+\begin{table}[h]
+\centering
+\caption{不同方法在同一份100条公开集上的运行结果。}
+\begin{tabularx}{\linewidth}{lXrrr}
+\toprule
+方法 & 主要思路 & 正确数/100 & 调用数 & 无效返回\\
+\midrule
+方法1 & 待填 & 待填 & 待填 & 待填\\
+方法2 & 待填 & 待填 & 待填 & 待填\\
+方法3 & 待填 & 待填 & 待填 & 待填\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\clearpage
+\section{实验心得}
+\todo{结合结果和代表性案例，分析哪些改动有效、哪些没有达到预期，以及可能的原因。}
+\begin{figure}[h]
+\centering
+\IfFileExists{figures/run.png}{\includegraphics[width=\linewidth,height=5cm,keepaspectratio]{figures/run.png}}{\fbox{\parbox[c][3cm][c]{0.92\linewidth}{\centering 放入自己的运行与评测截图\\展示结果排行榜、完成条数和调用预算\\保存为figures/run.png}}}
+\caption{自己的真实运行记录，截图中的版本、正确数与表格一致。}
+\end{figure}
+
+\todo{总结最有价值的发现、方法的局限和进一步改进的方向。}
+\todo{正文2—4页，最多4页，包含真实运行截图。}
+\clearpage
+\section*{参考文献}
+\todo{列出实际引用的文献。参考文献与附录另起页。}
+\appendix
+\section{最终选定的提示词}
+\todo{列出最终选定的完整提示词，与提交的solution.py一致。}
+\begin{Verbatim}[fontsize=\small,frame=single]
+粘贴最终采用的system与user模板。
+动态字段使用清晰的变量名标明。
+长行可手动换行。
+\end{Verbatim}
+\todo{若采用动态选例或多轮调用，简述材料选择、消息构造和答案汇总方式。}
+\end{document}

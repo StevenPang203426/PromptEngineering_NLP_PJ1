@@ -1,0 +1,66 @@
+{
+  "model": "Qwen/Qwen3-4B",
+  "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+  "files": [
+    {
+      "path": "config.json",
+      "size": 726,
+      "algorithm": "git-sha1",
+      "digest": "e49eccdc32f36da9c09cfa0e737084f9e0105e5e"
+    },
+    {
+      "path": "generation_config.json",
+      "size": 239,
+      "algorithm": "git-sha1",
+      "digest": "20a8a9156fc8c3f25295ca067f61fdf120d517c5"
+    },
+    {
+      "path": "merges.txt",
+      "size": 1671853,
+      "algorithm": "git-sha1",
+      "digest": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+    },
+    {
+      "path": "model-00001-of-00003.safetensors",
+      "size": 3957900840,
+      "algorithm": "sha256",
+      "digest": "328a91d3122359d5547f9d79521205bc0a46e1f79a792dfe650e99fc2d651223"
+    },
+    {
+      "path": "model-00002-of-00003.safetensors",
+      "size": 3987450520,
+      "algorithm": "sha256",
+      "digest": "6cd087b316306a68c562436b5492edbcf6e16c6dba3a1308279caa5a58e21ca5"
+    },
+    {
+      "path": "model-00003-of-00003.safetensors",
+      "size": 99630640,
+      "algorithm": "sha256",
+      "digest": "e4bf436957184f4eeb86a80e9db394503f1f56446b2e6b7edeac5b81470f4ca1"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "size": 32819,
+      "algorithm": "git-sha1",
+      "digest": "95c0a0059df040d75dc6c396b174382cf61d2f91"
+    },
+    {
+      "path": "tokenizer.json",
+      "size": 11422654,
+      "algorithm": "sha256",
+      "digest": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "size": 9732,
+      "algorithm": "git-sha1",
+      "digest": "417d038a63fa3de29cfde265caedae14d1a58d92"
+    },
+    {
+      "path": "vocab.json",
+      "size": 2776833,
+      "algorithm": "git-sha1",
+      "digest": "4783fe10ac3adce15ac8f358ef5462739852c569"
+    }
+  ]
+}

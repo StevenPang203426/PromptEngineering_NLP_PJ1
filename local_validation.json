@@ -1,0 +1,47 @@
+{
+  "checked_at_utc": "2026-11-10T05:08:19.699119+00:00",
+  "kind": "OFFLINE_VALIDATION_NOT_MODEL_ACCURACY",
+  "unit_test_command": "python -m unittest -v test_experiments",
+  "unit_tests_passed": 8,
+  "pipeline_command": "python experiment.py --mock",
+  "pipeline": [
+    {
+      "method": "m1",
+      "completed": 100,
+      "invalid": 0,
+      "calls": 100,
+      "budget_limit": 500,
+      "external_model_requests": 0,
+      "max_message_bytes": 4562,
+      "solution_sha256": "91cf3e2740033d291162979e5f32a932aecbd25a3d552abc2c9b237542963fc7",
+      "wall_seconds": 3.329
+    },
+    {
+      "method": "m2",
+      "completed": 100,
+      "invalid": 0,
+      "calls": 100,
+      "budget_limit": 500,
+      "external_model_requests": 0,
+      "max_message_bytes": 5184,
+      "solution_sha256": "4c89fd59bfc38aa51187934e7ff88b7fea735c96c96e6cdd4fc946a0efa47a4a",
+      "wall_seconds": 2.907
+    },
+    {
+      "method": "m3",
+      "completed": 100,
+      "invalid": 0,
+      "calls": 100,
+      "budget_limit": 500,
+      "external_model_requests": 0,
+      "max_message_bytes": 17986,
+      "solution_sha256": "6292e9420c49871ca683e6826e823d36af83f464fd4c597bc1451f074fb34b8d",
+      "wall_seconds": 3.343
+    }
+  ],
+  "limitations": [
+    "Real Qwen3 generation not tested locally",
+    "Linux GPU deployment not executed",
+    "No real accuracy measured; mock returns A for every question"
+  ]
+}
