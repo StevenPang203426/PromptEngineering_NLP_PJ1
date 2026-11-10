@@ -1,5 +1,7 @@
 # PromptEngineering NLP PJ1 — 实验方案
 
+服务器克隆、模型部署、仅运行 M1/M2/M3 三组实验、结果查看与下载的完整步骤见 [SERVER_GUIDE.md](SERVER_GUIDE.md)。
+
 固定使用课程 Qwen3-4B thinking，比对两篇论文在数据记录时的引用量。
 当前实现包含 M1、M2、M3、M3r、M4、M5、M6；本机模拟测试验证代码和运行流程，真实模型成绩待 GPU 服务器运行。
 课程原始要求在 `student/README.md`。运行器、评测器、模型部署配置及数据保持课程原版。
