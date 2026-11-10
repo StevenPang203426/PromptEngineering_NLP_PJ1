@@ -1,9 +1,9 @@
 {
-  "checked_at_utc": "2026-11-10T05:08:19.699119+00:00",
+  "checked_at_utc": "2026-11-10T05:51:55.204409+00:00",
   "kind": "OFFLINE_VALIDATION_NOT_MODEL_ACCURACY",
-  "unit_test_command": "python -m unittest -v test_experiments",
-  "unit_tests_passed": 8,
-  "pipeline_command": "python experiment.py --mock",
+  "unit_test_command": "python -m unittest discover -p \"test_*.py\"",
+  "unit_tests_passed": 26,
+  "pipeline_command": "python experiment.py --mock; python experiment.py --mock --method m4; python experiment.py --mock --method m6",
   "pipeline": [
     {
       "method": "m1",
@@ -13,8 +13,8 @@
       "budget_limit": 500,
       "external_model_requests": 0,
       "max_message_bytes": 4562,
-      "solution_sha256": "91cf3e2740033d291162979e5f32a932aecbd25a3d552abc2c9b237542963fc7",
-      "wall_seconds": 3.329
+      "solution_sha256": "00f65c62a3ab638240986699613dc83ac692ff14b39d8dcd616c1cda75f2502e",
+      "wall_seconds": 4.669
     },
     {
       "method": "m2",
@@ -24,8 +24,8 @@
       "budget_limit": 500,
       "external_model_requests": 0,
       "max_message_bytes": 5184,
-      "solution_sha256": "4c89fd59bfc38aa51187934e7ff88b7fea735c96c96e6cdd4fc946a0efa47a4a",
-      "wall_seconds": 2.907
+      "solution_sha256": "a6c4aad15a08246bdffd5c5541c5c022c3ead1887b3399aae2c2d12ec4c31c77",
+      "wall_seconds": 4.751
     },
     {
       "method": "m3",
@@ -34,9 +34,53 @@
       "calls": 100,
       "budget_limit": 500,
       "external_model_requests": 0,
-      "max_message_bytes": 17986,
-      "solution_sha256": "6292e9420c49871ca683e6826e823d36af83f464fd4c597bc1451f074fb34b8d",
-      "wall_seconds": 3.343
+      "max_message_bytes": 17955,
+      "solution_sha256": "12e3d03bfd7b6d7f30e8330a15e8628e3a4ac627fdb2ee54104453a392689550",
+      "wall_seconds": 4.739
+    },
+    {
+      "method": "m3r",
+      "completed": 100,
+      "invalid": 0,
+      "calls": 100,
+      "budget_limit": 500,
+      "external_model_requests": 0,
+      "max_message_bytes": 17122,
+      "solution_sha256": "4182ea1401f50441a6963ba2eb80fe79147726bacab5cf07d149e7c727a56472",
+      "wall_seconds": 4.672
+    },
+    {
+      "method": "m4",
+      "completed": 100,
+      "invalid": 0,
+      "calls": 100,
+      "budget_limit": 500,
+      "external_model_requests": 0,
+      "max_message_bytes": 5309,
+      "solution_sha256": "28f8ea68bded10c39343e4379a27b80d42e9eb654a223794edc793c3b095eb38",
+      "wall_seconds": 4.696
+    },
+    {
+      "method": "m5",
+      "completed": 100,
+      "invalid": 0,
+      "calls": 400,
+      "budget_limit": 500,
+      "external_model_requests": 0,
+      "max_message_bytes": 5309,
+      "solution_sha256": "c241930c94d6f879e27e42bab2018d6d46518062385f4be824e485d2a0222985",
+      "wall_seconds": 4.675
+    },
+    {
+      "method": "m6",
+      "completed": 100,
+      "invalid": 0,
+      "calls": 400,
+      "budget_limit": 500,
+      "external_model_requests": 0,
+      "max_message_bytes": 5309,
+      "solution_sha256": "617e63f689e3f43240b5bef4ffa7d9f6c13d3012a8b3390919f694c9dfd600e2",
+      "wall_seconds": 5.182
     }
   ],
   "limitations": [
