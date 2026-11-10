@@ -6,6 +6,9 @@ __pycache__/
 .env.*
 student/runs/
 student/runs_mock/
+student/runs_dev/
+student/runs_mock_dev/
+student/data/examples_labels.json
 *.log
 *.aux
 *.out
