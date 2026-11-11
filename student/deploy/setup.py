@@ -86,7 +86,31 @@ def choose_profile(requested):
     return requested
 
 
-def preflight():
+def driver_check(driver, gpu, allow_older_driver=False):
+    """Course threshold by default; opt-in CUDA 12 minor compatibility trial."""
+    version = tuple(map(int, driver.strip().split('.')))
+    minimum = tuple(map(int, SPEC['minimum_driver'].split('.')))
+    width = max(len(version), len(minimum))
+    older = version + (0,) * (width - len(version)) < minimum + (0,) * (width - len(minimum))
+    bypass = False
+    if older:
+        # NVIDIA CUDA 12.x Linux minor-version compatibility floor. This does
+        # not guarantee PTX JIT or vLLM kernels work on an older driver.
+        compatible_trial = (SPEC['profile'] == '4090' and '4090' in gpu
+                            and str(SPEC['cuda']).startswith('12.')
+                            and version + (0,) * max(0, 3 - len(version)) >= (525, 60, 13))
+        if not (allow_older_driver and compatible_trial):
+            raise RuntimeError(f"{SPEC['profile']}配置需要驱动至少{SPEC['minimum_driver']}，当前为{driver.strip()}。"
+                               '4090 / CUDA 12.x 且驱动至少525.60.13时，可加 --allow-older-driver 实验性试运行。')
+        bypass = True
+        say('实验性兼容模式：跳过课程驱动版本门槛；尚未验证 CUDA 运算或模型推理。')
+    return {'driver': driver.strip(), 'gpu': gpu.strip(), 'profile': SPEC['profile'],
+            'course_minimum_driver': SPEC['minimum_driver'],
+            'older_driver_requested': allow_older_driver, 'driver_threshold_bypassed': bypass,
+            'cuda_smoke_passed': False}
+
+
+def preflight(allow_older_driver=False):
     if sys.platform != 'linux' or platform.machine() not in ('x86_64', 'AMD64'):
         raise RuntimeError('请在 Linux x86_64 GPU 服务器运行部署脚本。个人电脑只需运行评测客户端。')
     if not shutil.which('nvidia-smi'):
@@ -94,14 +118,15 @@ def preflight():
     info = run(['nvidia-smi', '--query-gpu=driver_version,name,memory.total',
                 '--format=csv,noheader'], capture_output=True, text=True).stdout.strip()
     issues = []
-    minimum = tuple(map(int, SPEC['minimum_driver'].split('.')))
     selected = os.environ.get('COURSE_GPU', os.environ.get('CUDA_VISIBLE_DEVICES', '0')).split(',')[0]
     selected_info = run(['nvidia-smi', '--id=' + selected, '--query-gpu=driver_version,name',
                          '--format=csv,noheader'], capture_output=True, text=True).stdout.strip()
     driver, gpu = selected_info.split(',', 1)
-    version = tuple(map(int, driver.strip().split('.')))
-    if version + (0,) * (len(minimum)-len(version)) < minimum:
-        issues.append(f"{SPEC['profile']}配置需要驱动至少{SPEC['minimum_driver']}，当前为{driver.strip()}")
+    driver_status = None
+    try:
+        driver_status = driver_check(driver, gpu, allow_older_driver)
+    except RuntimeError as exc:
+        issues.append(str(exc))
     if '5090' in gpu and SPEC['profile'] == '4090':
         issues.append('5090不能使用4090的CUDA 12.8配置，请改为 --profile 5090')
     if not (shutil.which('gcc') or shutil.which('cc')):
@@ -116,6 +141,23 @@ def preflight():
     if issues:
         raise RuntimeError('\n- ' + '\n- '.join(issues))
     say('GPU：\n' + info)
+    return driver_status
+
+
+def cuda_smoke_test(python):
+    """Exercise real CUDA operations before downloading the model in trial mode."""
+    code = '''import torch
+assert torch.cuda.is_available(), "CUDA is unavailable"
+x = torch.ones((64, 64), device="cuda", dtype=torch.bfloat16)
+y = x @ x
+z = (x + x).sum()
+torch.cuda.synchronize()
+assert torch.allclose(y.float(), torch.full((64, 64), 64.0, device="cuda"))
+assert z.item() == 8192, "CUDA elementwise/reduction result mismatch"
+print("CUDA smoke test passed: BF16 matmul, elementwise, reduction, synchronize")
+'''
+    run([python, '-c', code])
+    say('CUDA 基础运算通过；仍需 vLLM 启动与真实题目验证。')
 
 def bootstrap_uv():
     tools = RUNTIME / 'tools'
@@ -246,21 +288,30 @@ def main():
     parser.add_argument('--profile', choices=['auto', '4090', '5090'], default=os.environ.get('COURSE_DEPLOY_PROFILE', 'auto'))
     parser.add_argument('--describe', action='store_true', help='只显示所选配置，不安装或运行模型')
     parser.add_argument('--check', action='store_true', help='只检查硬件、驱动与磁盘，不安装')
+    parser.add_argument('--allow-older-driver', action='store_true',
+                        help='实验性允许4090使用低于课程门槛、但至少525.60.13的CUDA 12兼容驱动')
     args = parser.parse_args()
     choose_profile(args.profile)
     say(f"部署配置：{SPEC['profile']} / CUDA {SPEC['cuda']} / vLLM {SPEC['vllm']}")
     if args.describe:
         say(json.dumps(SPEC, ensure_ascii=False, indent=2))
         return
-    preflight()
+    driver_status = preflight(args.allow_older_driver)
     if args.check:
         say('部署前检查通过。')
         return
     os.environ['CUDA_VISIBLE_DEVICES'] = os.environ.get('COURSE_GPU', os.environ.get('CUDA_VISIBLE_DEVICES', '0'))
     RUNTIME.mkdir(parents=True, exist_ok=True)
+    driver_status['checked_at'] = datetime.now(timezone.utc).isoformat()
+    driver_record = RUNTIME / 'driver-check.json'
+    driver_record.write_text(json.dumps(driver_status, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     uv = bootstrap_uv()
     say('准备固定版本 Python 和推理依赖，首次运行需要下载。')
     python = prepare_python(uv)
+    if driver_status['driver_threshold_bypassed']:
+        cuda_smoke_test(python)
+        driver_status['cuda_smoke_passed'] = True
+        driver_record.write_text(json.dumps(driver_status, ensure_ascii=False, indent=2) + '\n', encoding='utf8')
     model_dir = prepare_model(python)
     port = int(os.environ.get('COURSE_PORT', '8000'))
     if not 1 <= port <= 65535:

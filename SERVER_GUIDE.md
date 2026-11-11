@@ -191,6 +191,25 @@ Get-ChildItem "$resultDir\runs\reports\*.html" | Sort-Object LastWriteTime -Desc
 
 ## 8. 常见情况与后续
 
+### 4090 旧驱动的实验性试运行
+
+若唯一阻塞是驱动 `550.54.14` 低于课程门槛 `550.142`，可以显式试运行：
+
+```bash
+git pull --ff-only origin feat/vote-experiments
+bash deploy/setup.sh --check --allow-older-driver
+bash deploy/start.sh --allow-older-driver
+```
+
+此开关仅允许实际 4090、CUDA 12.x 配置、驱动至少 525.60.13 的情况越过课程驱动门槛；磁盘、编译器和环境版本检查仍执行。
+安装固定依赖后、下载模型前会实际执行 BF16 矩阵乘法、逐元素运算、归约和 CUDA 同步，失败立即停止。
+`.lab-runtime/driver-check.json` 记录实际驱动、是否放行及基础运算检查状态。
+基础运算通过也不等于 vLLM 或全部模型内核兼容。服务启动后仍需 `python check_server.py` 和三题真实试跑。
+
+依据 [NVIDIA CUDA 小版本兼容说明](https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html)，CUDA 12.x 可以在满足最低要求的旧驱动上运行部分应用，但 PTX JIT 与需要新驱动的功能存在限制。
+因此课程脚本门槛不等同于已经测出的实际运行下限；本开关用于验证，不能保证成功，也不改变课程模型或依赖版本。
+若日志出现 `unsupported PTX`、`unsupported toolchain`、`requires newer driver` 等错误，应保留完整日志，依据实际错误处理或升级宿主机驱动。
+
 - 健康检查连接失败：恢复 `nlp-model` 会话看日志，确认服务就绪且模型进程未退出。
 - 驱动或磁盘检查失败：按部署检查给出的实际原因调整镜像或空间，然后重新检查。
 - 模型下载中断：再次执行 `bash deploy/start.sh`；脚本会检查环境与模型，不要先删除整个运行环境。
